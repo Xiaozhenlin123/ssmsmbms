@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+		
+   <!-- 0、读取属性文件-->
+   <!--<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+       <property name="locations">
+           <value>classpath:jdbc.properties</value>
+       </property>
+   </bean>
+    -->
+   
+   <!--引入属性文件
+      <context:property-placeholder location="jdbc.properties"/> 
+   -->
+   
+    <!-- 自动扫描注解包 -->
+    <context:component-scan base-package="com.zt.service.impl"></context:component-scan>
+
+	<!-- 1、数据源 : DriverManagerDataSource -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	    <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+	    <property name="url" value="jdbc:mysql://localhost:3306/smbms"></property>
+	    <property name="username" value="root"></property>
+	    <property name="password" value="root"></property>
+	</bean>
+	
+	<!-- 2、 mybatis 的 SqlSession 的工厂:SqlSessionFactory
+	     BeandataSource、 typeAliasesPackage、mapperLocations 
+    -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="typeAliasesPackage" value="com.zt.entity"></property>
+        <property name="mapperLocations" value="classpath:mapper/*.xml"></property>
+    </bean>
+	
+	<!-- 3. mybatis 自动扫描接口文件 : MapperScannerConfigurer
+            sqlSessionFactory / basePackage
+    -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+        <property name="basePackage" value="com.zt.mapper"></property>
+    </bean>
+    
+    <!-- 4、事物管理 -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+    
+    <!-- 5、声明事物 -->
+    <tx:annotation-driven transaction-manager="txManager"/>
+</beans> 

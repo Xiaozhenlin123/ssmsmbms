@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.zt.mapper.UserMapper">      
+   <!-- 1、列名和属性名不一致    2、多表查询 -->
+   <resultMap type="User" id="userResultMap">
+      <id property="id" column="id"/>
+      <result property="userCode2" column="userCode"/>
+      <result property="userName" column="userName"/>
+      <result property="userPassword" column="userPassword"/>
+   </resultMap>
+   
+   <!-- 添加操作 
+   <insert id="addUser" parameterType="User">
+      INSERT INTO smbms_user(usercode,username,userpassword,gender,birthday,phone,address,userrole,createdby,creationDate,modifyby,modifydate) 
+      VALUES(#{userCode},#{userName},#{userPassword},#{gender},#{birthday},#{phone},#{address},#{userRole},#{createdBy},#{creationDate},#{modifyBy},#{modifyDate})
+   </insert>
+   -->
+   
+   <!-- 刪除 -->
+   <delete id="delUserById" parameterType="int">
+      DELETE FROM smbms_user WHERE id=#{id}
+   </delete>
+
+   
+   <!-- 修改 
+   <update id="updateUser" parameterType="User">
+      UPDATE smbms_user SET userpassword=#{userPassword} where usercode=#{userCode2}
+   </update>
+   -->
+   
+   <!-- xml登录
+   <select id="loginUser" resultMap="userResultMap" parameterType="User">
+      SELECT * FROM smbms_user WHERE userCode=#{userCode2} and userPassword=#{userPassword}
+   </select> 
+     --> 
+  
+</mapper>
